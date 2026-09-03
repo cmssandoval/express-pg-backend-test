@@ -1,0 +1,10 @@
+-- DATABASE CREATION.
+CREATE DATABASE gestion_clientes;
+
+-- users TABLE CREATION.
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR NOT NULL UNIQUE,
+    password VARCHAR(50)
+);
