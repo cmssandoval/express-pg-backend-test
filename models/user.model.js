@@ -56,9 +56,31 @@ const getUsers = async () => {
     }
 };
 
-const updateUserById = async ( userId ) => {
-    
-    return;
+/**
+ * Updates a User replacing each property stored by new values.
+ * @param {Like<User>} userLike User like data to replace the stored User with.
+ * @param {String} userId Target User id to replace its data.
+ * @returns {Promise<Object|Error>} User updated.
+ */
+const updateUserById = async ( userLike, userId ) => {
+    try {
+        const query =
+            `UPDATE users SET
+                name = $1,
+                email = $2,
+                password = $3
+            WHERE id = $4
+            RETURNING *`;
+        const { name, email, password } = new User( userLike );
+        const values = [name, email, password, userId];
+        const result = await pool.query(query, values);
+
+        console.log(`El usuario con id ${userId} ha sido actualizado`);
+        return result.rows[0];
+    } catch (error) {
+        console.log(error);
+        return error;
+    } 
 };
 
 const userModel = {

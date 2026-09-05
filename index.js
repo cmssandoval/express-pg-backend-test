@@ -68,7 +68,7 @@ app.post('/users', async ( req, res ) => {
         };
 
         const response = await userModel.addUser( userLike );
-        console.log( response );
+        // console.log( response );
 
         if ( response.message ) {
             return res.status(500).json({
@@ -101,6 +101,55 @@ app.delete('/users/:id', async ( req, res ) => {
             message: "Usuario Eliminado",
             user: response,
         });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message,
+        });
+    }
+})
+
+// PUT (update) completely a user by its id
+app.put('/users/:id', async ( req, res ) => {
+    try {
+        const { name, email, password } = req.body;
+        const { id } = req.params;
+
+        if ( !name || !email || !password) {
+            return res.status(400).json({
+                error: "Bad Request",
+                message: "El cuerpo de la petición debe contener datos válidos."
+            });
+        }
+
+        if ( !id ) {
+            return res.status(400).json({
+                error: "Bad Request",
+                message: "El parámetro id de la petición debe contener datos válidos."
+            });
+        }
+
+        const userLike = {
+            name:       name.trim(),
+            email:      email.trim(),
+            password:   password.trim(),
+        };
+
+        const response = await userModel.updateUserById( userLike, id );
+
+        if ( response.message ) {
+            return res.status(500).json({
+                message: "Internal Server Error",
+                error: response.message,
+            });
+        }
+
+        return res.status(200).json({
+            message: "Usuario Actualizado",
+            updatedUser: response,
+        });
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({
