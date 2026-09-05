@@ -1,6 +1,11 @@
 const { pool } = require('../database/databaseConnection.js');
 const User = require('../entities/user.entity.js');
 
+/**
+ * Adds a new User to the database.
+ * @param {Like<User>} userLike User like data.
+ * @returns {Promise<Object|Error>} User added.
+ */
 const addUser = async ( userLike ) => {
     try {
         const user = new User( userLike );
@@ -17,6 +22,11 @@ const addUser = async ( userLike ) => {
     }
 };
 
+/**
+ * Deletes an existing User from the database.
+ * @param {String} userId Target User id.
+ * @returns {Promise<Object|Error>} User deleted.
+ */
 const deleteUserById = async ( userId ) => {
     try {
         const query = 'DELETE FROM users WHERE id = $1 RETURNING *';
@@ -28,6 +38,11 @@ const deleteUserById = async ( userId ) => {
     }
 };
 
+/**
+ * Gets an existing User from the database.
+ * @param {String} userId Target User id.
+ * @returns {Promise<Object|Error>} A User that matches the id.
+ */
 const getUserById = async ( userId ) => {
     try {
         const query = 'SELECT * FROM users WHERE id = $1';
@@ -44,6 +59,10 @@ const getUserById = async ( userId ) => {
     }
 };
 
+/**
+ * Gets all User stored in the database.
+ * @returns {Promise<Array<Object>|Error>} All Users stored in the database.
+ */
 const getUsers = async () => {
     try {
         const query = 'SELECT * FROM users';
@@ -83,6 +102,9 @@ const updateUserById = async ( userLike, userId ) => {
     } 
 };
 
+/**
+ * userModel contains an object with functions to manipulate User type data. 
+ */
 const userModel = {
     addUser,
     deleteUserById,

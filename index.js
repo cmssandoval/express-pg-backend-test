@@ -1,18 +1,24 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv');
 const { userModel } = require('./models/user.model');
 
+// Express app instantiation
 const app = express();
-const PORT = 5000;
 
+// Server port
+const PORT = process.env.PORT || 5000;
+
+// Middlewares
 app.use(express.json());
 app.use(cors());
 
+// Server listening initialization
 app.listen(PORT, () => {
     console.log(`Servidor iniciado en http://localhost:${PORT}/`);
 });
 
-// GET users
+// GET all users
 app.get('/users', async ( req, res ) => {
     try {
         const response = await userModel.getUsers();
@@ -26,7 +32,7 @@ app.get('/users', async ( req, res ) => {
     }
 });
 
-// GET user by id
+// GET an user by id
 app.get('/users/:id', async ( req, res ) => {
     try {
         const { id } = req.params;
@@ -49,7 +55,7 @@ app.get('/users/:id', async ( req, res ) => {
     }
 })
 
-// POST users
+// POST an user
 app.post('/users', async ( req, res ) => {
     try {
         const { name, email, password } = req.body;
@@ -91,7 +97,7 @@ app.post('/users', async ( req, res ) => {
     }
 });
 
-// DELETE users by id
+// DELETE an user by id
 app.delete('/users/:id', async ( req, res ) => {
     try {
         const { id } = req.params;

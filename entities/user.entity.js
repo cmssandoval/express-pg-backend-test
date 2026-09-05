@@ -1,13 +1,13 @@
 /**
- * Representa la entidad de un User.
+ * Represents an User entity.
  * @class
  */
 class User {
     /**
-     * Crea una instancia de User.
-     * @param {String} name Nombre del usuario. 
-     * @param {String} email Email del usuario
-     * @param {String} password Contraseña del usuario
+     * Creates a User instance.
+     * @param {String} name User name. 
+     * @param {String} email User email.
+     * @param {String} password User password.
      */
     constructor ({ name, email, password }){
         this.name       = name;
