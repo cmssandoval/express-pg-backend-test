@@ -3,7 +3,7 @@ const User = require('../entities/user.entity.js');
 
 /**
  * Adds a new User to the database.
- * @param {Like<User>} userLike User like data.
+ * @param {Like<User>} userLike User-like data.
  * @returns {Promise<Object|Error>} User added.
  */
 const addUser = async ( userLike ) => {
@@ -14,7 +14,7 @@ const addUser = async ( userLike ) => {
         const values = [user.name, user.email, user.password];
         const result = await pool.query(query, values);
 
-        console.log('Usuario agregado a la base de datos');
+        console.log('User added to the database successfully');
         return result.rows[0];
     } catch (error) {
         console.log(error);
@@ -49,7 +49,7 @@ const getUserById = async ( userId ) => {
         const result = await pool.query(query, [userId]);
 
         if ( result.rows.length === 0) {
-            return {message: `El usuario con id ${userId} no existe`};
+            return {message: `The user with id ${userId} does not exists`};
         }
 
         return result.rows[0];
@@ -60,7 +60,7 @@ const getUserById = async ( userId ) => {
 };
 
 /**
- * Gets all User stored in the database.
+ * Gets all Users stored in the database.
  * @returns {Promise<Array<Object>|Error>} All Users stored in the database.
  */
 const getUsers = async () => {
@@ -94,7 +94,7 @@ const updateUserById = async ( userLike, userId ) => {
         const values = [name, email, password, userId];
         const result = await pool.query(query, values);
 
-        console.log(`El usuario con id ${userId} ha sido actualizado`);
+        console.log(`The user with id ${userId} has been updated`);
         return result.rows[0];
     } catch (error) {
         console.log(error);

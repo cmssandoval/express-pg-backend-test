@@ -1,5 +1,5 @@
 /**
- * Represents an User entity.
+ * Represents a User entity.
  * @class
  */
 class User {

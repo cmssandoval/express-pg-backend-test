@@ -32,7 +32,7 @@ app.get('/users', async ( req, res ) => {
     }
 });
 
-// GET an user by id
+// GET a user by id
 app.get('/users/:id', async ( req, res ) => {
     try {
         const { id } = req.params;
@@ -53,9 +53,9 @@ app.get('/users/:id', async ( req, res ) => {
             error: error.message,
         });
     }
-})
+});
 
-// POST an user
+// POST a user
 app.post('/users', async ( req, res ) => {
     try {
         const { name, email, password } = req.body;
@@ -97,7 +97,7 @@ app.post('/users', async ( req, res ) => {
     }
 });
 
-// DELETE an user by id
+// DELETE a user by id
 app.delete('/users/:id', async ( req, res ) => {
     try {
         const { id } = req.params;
@@ -114,7 +114,7 @@ app.delete('/users/:id', async ( req, res ) => {
             error: error.message,
         });
     }
-})
+});
 
 // PUT (update) completely a user by its id
 app.put('/users/:id', async ( req, res ) => {
@@ -125,14 +125,14 @@ app.put('/users/:id', async ( req, res ) => {
         if ( !name || !email || !password) {
             return res.status(400).json({
                 error: "Bad Request",
-                message: "El cuerpo de la petición debe contener datos válidos."
+                message: "The request body must have valid data.",
             });
         }
 
         if ( !id ) {
             return res.status(400).json({
                 error: "Bad Request",
-                message: "El parámetro id de la petición debe contener datos válidos."
+                message: "The request id parameter must have valid data.",
             });
         }
 
@@ -152,7 +152,7 @@ app.put('/users/:id', async ( req, res ) => {
         }
 
         return res.status(200).json({
-            message: "Usuario Actualizado",
+            message: "Updated User",
             updatedUser: response,
         });
 
@@ -163,4 +163,4 @@ app.put('/users/:id', async ( req, res ) => {
             error: error.message,
         });
     }
-})
+});
