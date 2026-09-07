@@ -33,7 +33,7 @@ const databaseSetup = async () => {
         
         const createUsersTableQueryResult = await pool.query(createUsersTableQuery);
         console.log(createUsersTableQueryResult);
-        return console.log('La base de datos y la tabla han sido creadas');
+        return console.log('The database and the table has been created');
     } catch (error) {
         return console.log('[ERROR]: ', error);
     }

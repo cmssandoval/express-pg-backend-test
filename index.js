@@ -63,7 +63,7 @@ app.post('/users', async ( req, res ) => {
         if ( !name || !email || !password) {
             return res.status(400).json({
                 error: "Bad Request",
-                message: "El cuerpo de la petición debe contener datos válidos."
+                message: "The request body must have valid data.",
             });
         }        
 
