@@ -24,4 +24,10 @@ Hello, this was made during a tutorship at my academy Desafío Latam. In this mo
 
 - In addition, I tried to be consistant, use correct function and variable names. I wrote JSDoc comments for autocompletion and references to functions. And finally, I also tried creating a User class to treat it like an entity, but I also could have made the User Model itself inside of the class.
 
+## Updates
+
+- I've made some refactoring to error handling, specifically modularizing as middlewares the functions to handle errors and validate request data from body and params. This is not needed at my course's actual stage, but I can see that is a good practice.
+- I've also learned how to throw errors correctly and its purpose. Something very different than return the errors.
+- Return the 'Errors as Values' is equivalent to treat the errors as normal data. This leads to create unnecessary validations.
+
 ***Thank you for reading this readme!***

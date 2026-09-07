@@ -1,166 +1,87 @@
+require('dotenv');
+
 const express = require('express');
 const cors = require('cors');
-require('dotenv');
-const { userModel } = require('./models/user.model');
+const errorHandler = require('./middlewares/errorHandler');
+const validateIdParam = require('./middlewares/validateIdParam');
+const validateUserBody = require('./middlewares/validateUserBody');
 
-// Express app instantiation
+const userModel = require('./models/user.model');
+const asyncHandler = require('./utils/asyncHandler');
+
 const app = express();
 
-// Server port
-const PORT = process.env.PORT || 5000;
+const serverPort = process.env.PORT || 5000;
 
-// Middlewares
 app.use(express.json());
 app.use(cors());
 
-// Server listening initialization
-app.listen(PORT, () => {
-    console.log(`Servidor iniciado en http://localhost:${PORT}/`);
+app.listen(serverPort, () => {
+    console.log(`Server is on at http://localhost:${serverPort}/`);
 });
 
 // GET all users
-app.get('/users', async ( req, res ) => {
-    try {
-        const response = await userModel.getUsers();
-        return res.status(200).json(response);
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message,
-        });
-    }
-});
+app.get('/users', asyncHandler(async ( req, res ) => {
+    const response = await userModel.getUsers();
+    return res.status(200).json(response);
+}));
 
 // GET a user by id
-app.get('/users/:id', async ( req, res ) => {
-    try {
-        const { id } = req.params;
-        const response = await userModel.getUserById( id );
+app.get('/users/:id', validateIdParam, asyncHandler(async ( req, res ) => {
+    const { id } = req.params;
 
-        if ( response.message ) {
-            return res.status(404).json({
-                error: "User Not Found",
-                message: response.message,
-            });
-        }
+    const response = await userModel.getUserById( id );
 
-        return res.status(200).json(response);
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message,
-        });
-    }
-});
+    return res.status(200).json(response);
+}));
 
 // POST a user
-app.post('/users', async ( req, res ) => {
-    try {
-        const { name, email, password } = req.body;
+app.post('/users', validateUserBody, asyncHandler(async ( req, res ) => {
+    const { name, email, password } = req.body;
 
-        if ( !name || !email || !password) {
-            return res.status(400).json({
-                error: "Bad Request",
-                message: "The request body must have valid data.",
-            });
-        }        
+    const userLike = {
+        name:       name.trim(),
+        email:      email.trim(),
+        password:   password.trim(),
+    };
 
-        const userLike = {
-            name:       name.trim(),
-            email:      email.trim(),
-            password:   password.trim(),
-        };
+    const response = await userModel.addUser( userLike );
 
-        const response = await userModel.addUser( userLike );
-        // console.log( response );
-
-        if ( response.message ) {
-            return res.status(500).json({
-                message: "Internal Server Error",
-                error: response.message,
-            });
-        }
-
-        return res.status(201).json({
-            message: "Usuario Creado",
-            user: response,
-        });
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message,
-        });
-    }
-});
+    return res.status(201).json({
+        message: "User Created",
+        user: response,
+    });
+}));
 
 // DELETE a user by id
-app.delete('/users/:id', async ( req, res ) => {
-    try {
-        const { id } = req.params;
-        const response = await userModel.deleteUserById( id );
+app.delete('/users/:id', validateIdParam, asyncHandler(async ( req, res ) => {
+    const { id } = req.params;
+    
+    const response = await userModel.deleteUserById( id );
 
-        return res.status(200).json({
-            message: "Usuario Eliminado",
-            user: response,
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message,
-        });
-    }
-});
+    return res.status(200).json({
+        message: "User Deleted",
+        user: response,
+    });
+}));
 
 // PUT (update) completely a user by its id
-app.put('/users/:id', async ( req, res ) => {
-    try {
-        const { name, email, password } = req.body;
-        const { id } = req.params;
+app.put('/users/:id', validateIdParam, validateUserBody, asyncHandler(async ( req, res ) => {
+    const { id } = req.params;
+    const { name, email, password } = req.body;
 
-        if ( !name || !email || !password) {
-            return res.status(400).json({
-                error: "Bad Request",
-                message: "The request body must have valid data.",
-            });
-        }
+    const userLike = {
+        name:       name.trim(),
+        email:      email.trim(),
+        password:   password.trim(),
+    };
 
-        if ( !id ) {
-            return res.status(400).json({
-                error: "Bad Request",
-                message: "The request id parameter must have valid data.",
-            });
-        }
+    const response = await userModel.updateUserById( userLike, id );
 
-        const userLike = {
-            name:       name.trim(),
-            email:      email.trim(),
-            password:   password.trim(),
-        };
+    return res.status(200).json({
+        message: "Updated User",
+        updatedUser: response,
+    });
+}));
 
-        const response = await userModel.updateUserById( userLike, id );
-
-        if ( response.message ) {
-            return res.status(500).json({
-                message: "Internal Server Error",
-                error: response.message,
-            });
-        }
-
-        return res.status(200).json({
-            message: "Updated User",
-            updatedUser: response,
-        });
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message,
-        });
-    }
-});
+app.use(errorHandler);

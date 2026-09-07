@@ -17,8 +17,7 @@ const addUser = async ( userLike ) => {
         console.log('User added to the database successfully');
         return result.rows[0];
     } catch (error) {
-        console.log(error);
-        return error;
+        throw error;
     }
 };
 
@@ -33,8 +32,7 @@ const deleteUserById = async ( userId ) => {
         const result = await pool.query(query, [userId]);
         return result.rows[0];
     } catch (error) {
-        console.log(error);
-        return error;
+        throw error;
     }
 };
 
@@ -44,19 +42,16 @@ const deleteUserById = async ( userId ) => {
  * @returns {Promise<Object|Error>} A User that matches the id.
  */
 const getUserById = async ( userId ) => {
-    try {
-        const query = 'SELECT * FROM users WHERE id = $1';
-        const result = await pool.query(query, [userId]);
+    const query = 'SELECT * FROM users WHERE id = $1';
+    const result = await pool.query(query, [userId]);
 
-        if ( result.rows.length === 0) {
-            return {message: `The user with id ${userId} does not exists`};
-        }
-
-        return result.rows[0];
-    } catch (error) {
-        console.log(error);
-        return error;
+    if ( result.rows.length === 0) {
+        const error = new Error(`The user with id ${userId} does not exists`);
+        error.status = 404;
+        throw error;
     }
+    
+    return result.rows[0];
 };
 
 /**
@@ -70,8 +65,7 @@ const getUsers = async () => {
 
         return result.rows;
     } catch (error) {
-        console.log(error);
-        return error;
+        throw error;
     }
 };
 
@@ -97,8 +91,7 @@ const updateUserById = async ( userLike, userId ) => {
         console.log(`The user with id ${userId} has been updated`);
         return result.rows[0];
     } catch (error) {
-        console.log(error);
-        return error;
+        throw error;
     } 
 };
 
@@ -113,4 +106,4 @@ const userModel = {
     updateUserById,
 };
 
-module.exports = { userModel };
+module.exports = userModel;
