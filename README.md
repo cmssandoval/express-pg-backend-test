@@ -26,8 +26,15 @@ Hello, this was made during a tutorship at my academy Desafío Latam. In this mo
 
 ## Updates
 
+### Error Handling and Data Validation
+
 - I've made some refactoring to error handling, specifically modularizing as middlewares the functions to handle errors and validate request data from body and params. This is not needed at my course's actual stage, but I can see that is a good practice.
 - I've also learned how to throw errors correctly and its purpose. Something very different than return the errors.
 - Return the 'Errors as Values' is equivalent to treat the errors as normal data. This leads to create unnecessary validations.
+
+### Password Hashing
+- I installed bcrypt after reading about basics of hashing and good practices for user data treatment. Now the password are hashed.
+- The database configuration template (queries) are updated to be able to use bcrypt (updated password varchar(50) to text).
+- The functions affected are addUser and updateUserById.
 
 ***Thank you for reading this readme!***

@@ -84,4 +84,15 @@ app.put('/users/:id', validateIdParam, validateUserBody, asyncHandler(async ( re
     });
 }));
 
+//* IMPLEMENT USER LOGIN
+// app.post('/login', asyncHandler(async ( req, res ) => {
+//     const { email, password } = req.body;
+//     const user = await userModel.getUserByEmail(email);
+
+//     // Validate data, consider middleware.
+//     // Also, consider middleware centralization.
+
+//     return res.status(201).json({ message: "Successfull Login" });
+// }));
+
 app.use(errorHandler);

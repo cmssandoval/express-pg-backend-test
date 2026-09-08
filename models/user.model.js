@@ -1,4 +1,8 @@
 const { pool } = require('../database/databaseConnection.js');
+
+const bcrypt = require('bcrypt');
+const SALT_ROUNDS = 10;
+
 const User = require('../entities/user.entity.js');
 
 /**
@@ -9,9 +13,13 @@ const User = require('../entities/user.entity.js');
 const addUser = async ( userLike ) => {
     try {
         const user = new User( userLike );
+        const hashedPassword = await bcrypt.hash(user.password, SALT_ROUNDS);
 
-        const query = 'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *';
-        const values = [user.name, user.email, user.password];
+        const query = `INSERT INTO users
+            (name, email, password)
+            VALUES ($1, $2, $3)
+            RETURNING id, name, email`;
+        const values = [user.name, user.email, hashedPassword];
         const result = await pool.query(query, values);
 
         console.log('User added to the database successfully');
@@ -77,15 +85,19 @@ const getUsers = async () => {
  */
 const updateUserById = async ( userLike, userId ) => {
     try {
+        const user = new User( userLike );
+        const hashedPassword = await bcrypt.hash(user.password, SALT_ROUNDS);
+        
         const query =
             `UPDATE users SET
                 name = $1,
                 email = $2,
                 password = $3
             WHERE id = $4
-            RETURNING *`;
-        const { name, email, password } = new User( userLike );
-        const values = [name, email, password, userId];
+            RETURNING id, name, email
+        `;
+
+        const values = [user.name, user.email, hashedPassword, userId];
         const result = await pool.query(query, values);
 
         console.log(`The user with id ${userId} has been updated`);
