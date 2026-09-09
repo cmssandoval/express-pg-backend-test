@@ -100,6 +100,12 @@ const updateUserById = async ( userLike, userId ) => {
         const values = [user.name, user.email, hashedPassword, userId];
         const result = await pool.query(query, values);
 
+        if ( result.rows.length === 0) {
+            const error = new Error(`The user with id ${userId} does not exists`);
+            error.status = 404;
+            throw error;
+        }
+
         console.log(`The user with id ${userId} has been updated`);
         return result.rows[0];
     } catch (error) {

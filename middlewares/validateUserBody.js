@@ -7,6 +7,12 @@ const validateUserBody = ( req, res, next ) => {
         return next(error);
     }
 
+    if ( !name.trim() || !email.trim() || !password.trim() ) {
+        const error = new Error("The request body must be complete and have valid data.");
+        error.status = 400;
+        return next(error);
+    }
+
     next();
 };
 

@@ -32,7 +32,13 @@ Hello, this was made during a tutorship at my academy Desafío Latam. In this mo
 - I've also learned how to throw errors correctly and its purpose. Something very different than return the errors.
 - Return the 'Errors as Values' is equivalent to treat the errors as normal data. This leads to create unnecessary validations.
 
+### Custom Error Messages
+
+- I implemented a few custom error messages instead of the default ones, as a test. Anyways, this study project is ending.
+- For the future projects, I need to read more code to see how to implement the error and handling how to communticate them to the client.
+
 ### Password Hashing
+
 - I installed bcrypt after reading about basics of hashing and good practices for user data treatment. Now the password are hashed.
 - The database configuration template (queries) are updated to be able to use bcrypt (updated password varchar(50) to text).
 - The functions affected are addUser and updateUserById.
