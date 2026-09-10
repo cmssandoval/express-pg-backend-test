@@ -38,6 +38,13 @@ const deleteUserById = async ( userId ) => {
     try {
         const query = 'DELETE FROM users WHERE id = $1 RETURNING *';
         const result = await pool.query(query, [userId]);
+
+    if ( result.rowCount === 0) {
+        const error = new Error(`The user with id ${userId} does not exists`);
+        error.status = 404;
+        throw error;
+    }
+
         return result.rows[0];
     } catch (error) {
         throw error;
@@ -50,16 +57,20 @@ const deleteUserById = async ( userId ) => {
  * @returns {Promise<Object|Error>} A User that matches the id.
  */
 const getUserById = async ( userId ) => {
-    const query = 'SELECT * FROM users WHERE id = $1';
-    const result = await pool.query(query, [userId]);
+    try {
+        const query = 'SELECT * FROM users WHERE id = $1';
+        const result = await pool.query(query, [userId]);
 
-    if ( result.rows.length === 0) {
-        const error = new Error(`The user with id ${userId} does not exists`);
-        error.status = 404;
+        if (result.rowCount === 0) {
+            const error = new Error(`The user with id ${userId} does not exists`);
+            error.status = 404;
+            throw error;
+        }
+
+        return result.rows[0];
+    } catch (error) {
         throw error;
     }
-    
-    return result.rows[0];
 };
 
 /**
@@ -70,6 +81,12 @@ const getUsers = async () => {
     try {
         const query = 'SELECT * FROM users';
         const result = await pool.query(query);
+
+    if ( result.rowCount === 0) {
+        const error = new Error(`Users table is empty`);
+        error.status = 404;
+        throw error;
+    }
 
         return result.rows;
     } catch (error) {
@@ -100,7 +117,7 @@ const updateUserById = async ( userLike, userId ) => {
         const values = [user.name, user.email, hashedPassword, userId];
         const result = await pool.query(query, values);
 
-        if ( result.rows.length === 0) {
+        if ( result.rowCount === 0) {
             const error = new Error(`The user with id ${userId} does not exists`);
             error.status = 404;
             throw error;

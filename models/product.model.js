@@ -42,6 +42,13 @@ const deleteProductById = async ( productId ) => {
     try {
         const query = 'DELETE FROM products WHERE id = $1 RETURNING *';
         const result = await pool.query(query, [productId]);
+
+    if ( result.rowCount === 0) {
+        const error = new Error(`The product with id ${productId} does not exists`);
+        error.status = 404;
+        throw error;
+    }
+
         return result.rows[0];
     } catch (error) {
         throw error;
@@ -54,16 +61,20 @@ const deleteProductById = async ( productId ) => {
  * @returns {Promise<Object|Error>} A product that matches the id.
  */
 const getProductById = async ( productId ) => {
-    const query = 'SELECT * FROM products WHERE id = $1';
-    const result = await pool.query(query, [productId]);
+    try {
+        const query = 'SELECT * FROM products WHERE id = $1';
+        const result = await pool.query(query, [productId]);
 
-    if ( result.rows.length === 0) {
-        const error = new Error(`The product with id ${productId} does not exists`);
-        error.status = 404;
+        if (result.rowCount === 0) {
+            const error = new Error(`The product with id ${productId} does not exists`);
+            error.status = 404;
+            throw error;
+        }
+
+        return result.rows[0];
+    } catch (error) {
         throw error;
     }
-    
-    return result.rows[0];
 };
 
 /**
@@ -74,6 +85,12 @@ const getProducts = async () => {
     try {
         const query = 'SELECT * FROM products';
         const result = await pool.query(query);
+
+        if ( result.rowCount === 0) {
+            const error = new Error(`Products table is empty`);
+            error.status = 404;
+            throw error;
+        }
 
         return result.rows;
     } catch (error) {
@@ -111,7 +128,7 @@ const updateProductById = async ( productLike, productId ) => {
 
         const result = await pool.query(query, values);
 
-        if ( result.rows.length === 0) {
+        if (result.rowCount === 0) {
             const error = new Error(`The product with id ${productId} does not exists`);
             error.status = 404;
             throw error;
