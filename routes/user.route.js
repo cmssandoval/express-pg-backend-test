@@ -1,7 +1,7 @@
 const { Router } = require('express');
-const { userController } = require('../controllers/user.controller');
-const validateUserBody = require('../middlewares/validateUserBody');
-const validateIdParam = require('../middlewares/validateIdParam');
+const { userController } = require('../controllers/user.controller.js');
+const validateUserBody = require('../middlewares/validateUserBody.js');
+const validateIdParam = require('../middlewares/validateIdParam.js');
 
 const router = Router();
 

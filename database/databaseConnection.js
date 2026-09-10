@@ -19,20 +19,29 @@ const pool = new Pool({
 // variables and create any database or any table.
 const databaseSetup = async () => {
     const createDatabaseQuery = 'CREATE DATABASE gestion_clientes';
-    const createUsersTableQuery =
-    `CREATE TABLE users (
+    // const createUsersTableQuery =
+    // `CREATE TABLE users (
+    //     id SERIAL PRIMARY KEY,
+    //     name VARCHAR(50) NOT NULL,
+    //     email VARCHAR NOT NULL UNIQUE,
+    //     password TEXT NOT NULL
+    // )`;
+    const createProductsTableQuery =
+    `CREATE TABLE products (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(50) NOT NULL,
-        email VARCHAR NOT NULL UNIQUE,
-        password TEXT NOT NULL
+        title VARCHAR(60) NOT NULL,
+        price INT NOT NULL CHECK (price > 0),
+        description TEXT NOT NULL,
+        stock INT NOT NULL DEFAULT 0 CHECK (stock > 0),
+        imageURL TEXT NOT NULL
     )`;
 
     try {
         // const createDatabaseQueryResult = await pool.query(createDatabaseQuery);
         // console.log(createDatabaseQueryResult);
         
-        const createUsersTableQueryResult = await pool.query(createUsersTableQuery);
-        console.log(createUsersTableQueryResult);
+        const createProductsTableQueryResult = await pool.query(createProductsTableQuery);
+        console.log(createProductsTableQueryResult);
         return console.log('The database and the table has been created');
     } catch (error) {
         return console.log('[ERROR]: ', error);

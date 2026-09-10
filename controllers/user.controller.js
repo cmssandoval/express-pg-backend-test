@@ -1,5 +1,3 @@
-const validateIdParam = require('../middlewares/validateIdParam.js');
-const validateUserBody = require('../middlewares/validateUserBody.js');
 const userModel = require('../models/user.model.js');
 const asyncHandler = require('../utils/asyncHandler.js');
 
